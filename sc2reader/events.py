@@ -6,7 +6,7 @@ from sc2reader import log_utils
 
 class Event(object):
     def __init__(self, frame, pid):
-        self.logger = log_utils.get_logger(self.__class__)
+        # self.logger = log_utils.get_logger(self.__class__)
         self.pid = pid
         self.frame = frame
         self.second = frame >> 4
@@ -125,6 +125,7 @@ class AbilityEvent(PlayerActionEvent):
         super(AbilityEvent, self).load_context(replay)
 
         if self.ability not in replay.datapack.abilities:
+            self.logger = log_utils.get_logger(self.__class__)
             if not getattr(replay, 'marked_error', None):
                 replay.marked_error=True
                 self.logger.error(replay.filename)
@@ -216,6 +217,7 @@ class SelectionEvent(PlayerActionEvent):
         for (obj_id, obj_type) in self.objects:
             if obj_type not in data.types:
                 msg = "Unit Type {0} not found in {1}"
+                self.logger = log_utils.get_logger(self.__class__)
                 self.logger.error(msg.format(hex(obj_type), data.__class__.__name__))
                 objects.append(DataObject(0x0))
 
